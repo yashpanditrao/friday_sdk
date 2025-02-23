@@ -160,4 +160,4 @@ The API includes rate limiting based on your API key type. You can check your cu
 
 ## Support
 
-For support, please contact support@friday.dev or visit our documentation at https://docs.friday.dev 
+For support, please contact hi@fridaydata.tech or visit our documentation at https://fridaydata.tech/docs
