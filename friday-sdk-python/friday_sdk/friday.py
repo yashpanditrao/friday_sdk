@@ -11,7 +11,7 @@ class FridayClient:
         base_url (str, optional): Base URL for the API. Defaults to production URL.
     """
     
-    def __init__(self, api_key: str, base_url: str = "https://friday-data.up.railway.app"):
+    def __init__(self, api_key: str, base_url: str = "https://friday-data-production.up.railway.app/"):
         self.api_key = api_key
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
@@ -22,7 +22,7 @@ class FridayClient:
 
     def _make_request(self, method: str, endpoint: str, **kwargs) -> dict:
         """Make a request to the API."""
-        url = urljoin(self.base_url, endpoint)
+        url = urljoin(self.base_url, endpoint.lstrip('/'))
         response = self.session.request(method, url, **kwargs)
         response.raise_for_status()
         return response.json()
@@ -78,12 +78,19 @@ class FridayClient:
             
         Returns:
             dict: Crawled data for each page
+            
+        Raises:
+            requests.exceptions.HTTPError: If the API request fails
+            ValueError: If invalid formats are provided
         """
-        return self._make_request("POST", "/crawl", json={
-            "url": url,
-            "formats": formats,
-            "max_pages": max_pages
-        })
+        try:
+            return self._make_request("POST", "/crawl", json={
+                "url": url,
+                "formats": formats,
+                "max_pages": max_pages
+            })
+        except requests.exceptions.HTTPError as e:
+            raise e
 
     def search(self, query: str, location: str = "US", num_results: int = 15) -> dict:
         """
@@ -118,12 +125,3 @@ class FridayClient:
             "url": url,
             "query": query
         })
-
-    def get_status(self) -> dict:
-        """
-        Get current API key status and rate limit information.
-        
-        Returns:
-            dict: API key status information
-        """
-        return self._make_request("GET", "/status") 

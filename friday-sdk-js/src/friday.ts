@@ -28,11 +28,12 @@ export class FridayClient {
 
   /**
    * Initialize the Friday API client.
-   * @param config - Configuration object containing API key and optional base URL
+   * @param apiKey - Your Friday API key
+   * @param baseUrl - Optional base URL for the API
    */
-  constructor(config: FridayClientConfig) {
-    this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl?.replace(/\/$/, '') || 'https://friday-data.up.railway.app';
+  constructor(apiKey: string, baseUrl?: string) {
+    this.apiKey = apiKey;
+    this.baseUrl = baseUrl?.replace(/\/$/, '') || 'https://friday-data-production.up.railway.app';
   }
 
   private async makeRequest<T>(
@@ -47,18 +48,25 @@ export class FridayClient {
       ...options.headers,
     };
 
-    const response = await fetch(url, {
-      method,
-      headers,
-      ...options,
-    });
+    try {
+      const response = await fetch(url, {
+        method,
+        headers,
+        ...options,
+      });
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(error.message || `HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(error.message || `HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Request failed: ${error.message}`);
+      }
+      throw error;
     }
-
-    return response.json();
   }
 
   /**
@@ -66,7 +74,7 @@ export class FridayClient {
    * @param profileUrl - LinkedIn profile URL to analyze
    */
   async getProfile(profileUrl: string): Promise<ApiResponse> {
-    return this.makeRequest('GET', `/profile?profile_url=${encodeURIComponent(profileUrl)}`);
+    return this.makeRequest('GET', `/profile?profile_url=${profileUrl}`);
   }
 
   /**
@@ -82,13 +90,13 @@ export class FridayClient {
   /**
    * Scrape a website.
    * @param url - URL to scrape
-   * @param options - Optional parameters for scraping
+   * @param formats - Output formats (default: ['html'])
    */
-  async scrape(url: string, options: ScrapeOptions = {}): Promise<ApiResponse> {
+  async scrape(url: string, formats: string[] = ['html']): Promise<ApiResponse> {
     return this.makeRequest('POST', '/scrape', {
       body: JSON.stringify({
         url,
-        formats: options.formats || ['html'],
+        formats,
       }),
     });
   }
@@ -96,14 +104,19 @@ export class FridayClient {
   /**
    * Crawl a website.
    * @param url - Starting URL to crawl
-   * @param options - Optional parameters for crawling
+   * @param formats - Output formats (default: ['html'])
+   * @param maxPages - Maximum number of pages to crawl (default: 10)
    */
-  async crawl(url: string, options: CrawlOptions = {}): Promise<ApiResponse> {
+  async crawl(
+    url: string,
+    formats: string[] = ['html'],
+    maxPages: number = 10
+  ): Promise<ApiResponse> {
     return this.makeRequest('POST', '/crawl', {
       body: JSON.stringify({
         url,
-        formats: options.formats || ['html'],
-        max_pages: options.maxPages || 10,
+        formats,
+        max_pages: maxPages,
       }),
     });
   }
@@ -111,14 +124,20 @@ export class FridayClient {
   /**
    * Perform a Google search.
    * @param query - Search query
-   * @param options - Optional parameters for search
+   * @param location - Search location (default: 'US')
+   * @param numResults - Number of results to return (default: 15)
+   * @returns Promise<ApiResponse> - Returns either an object or array response
    */
-  async search(query: string, options: SearchOptions = {}): Promise<ApiResponse> {
+  async search(
+    query: string,
+    location: string = 'US',
+    numResults: number = 5
+  ): Promise<ApiResponse> {
     return this.makeRequest('POST', '/search', {
       body: JSON.stringify({
         query,
-        location: options.location || 'US',
-        num_results: options.numResults || 15,
+        location,
+        num_results: numResults,
       }),
     });
   }
@@ -140,4 +159,4 @@ export class FridayClient {
   async getStatus(): Promise<ApiResponse> {
     return this.makeRequest('GET', '/status');
   }
-} 
+}

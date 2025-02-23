@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "keywords": [
     "friday",
@@ -15,7 +17,9 @@
     "sdk",
     "scraping",
     "linkedin",
-    "search"
+    "search",
+    "crawling",
+    "extraction"
   ],
   "author": "Friday Team",
   "license": "MIT",
@@ -28,13 +32,20 @@
   },
   "homepage": "https://github.com/friday/friday-sdk-js#readme",
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "jest": "^29.0.0",
+    "@types/dotenv": "^8.2.0",
     "@types/jest": "^29.0.0",
-    "ts-jest": "^29.0.0"
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
-    "cross-fetch": "^4.0.0"
+    "cross-fetch": "^4.0.0",
+    "dotenv": "^16.0.0",
+    "isomorphic-fetch": "^3.0.0"
   }
 } 
