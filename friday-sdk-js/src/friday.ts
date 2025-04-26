@@ -33,7 +33,7 @@ export class FridayClient {
    */
   constructor(apiKey: string, baseUrl?: string) {
     this.apiKey = apiKey;
-    this.baseUrl = baseUrl?.replace(/\/$/, '') || 'https://friday-data-production.up.railway.app';
+    this.baseUrl = baseUrl?.replace(/\/$/, '') || 'https://api.fridaydata.tech';
   }
 
   private async makeRequest<T>(
