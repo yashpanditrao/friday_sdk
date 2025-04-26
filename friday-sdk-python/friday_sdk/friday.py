@@ -11,7 +11,7 @@ class FridayClient:
         base_url (str, optional): Base URL for the API. Defaults to production URL.
     """
     
-    def __init__(self, api_key: str, base_url: str = "https://friday-data-production.up.railway.app/"):
+    def __init__(self, api_key: str, base_url: str = "https://api.fridaydata.tech/"):
         self.api_key = api_key
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
