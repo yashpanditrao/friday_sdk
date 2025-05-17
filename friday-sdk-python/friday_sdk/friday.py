@@ -1,5 +1,5 @@
 import requests
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Any
 from urllib.parse import urljoin
 
 class FridayClient:
@@ -110,18 +110,23 @@ class FridayClient:
             "num_results": num_results
         })
 
-    def extract(self, url: str, query: str) -> dict:
+    def extract(self, url: str, query: str, custom_schema: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None) -> dict:
         """
         Extract specific information from a website using AI.
         
         Args:
             url (str): Website URL to analyze
             query (str): Query describing what information to extract
+            custom_schema (Union[Dict[str, Any], List[Dict[str, Any]]], optional): Custom schema for structuring the extracted data
             
         Returns:
             dict: Extracted information
         """
-        return self._make_request("POST", "/extract", json={
+        payload = {
             "url": url,
             "query": query
-        })
+        }
+        if custom_schema is not None:
+            payload["custom_schema"] = custom_schema
+            
+        return self._make_request("POST", "/extract", json=payload)

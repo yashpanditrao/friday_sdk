@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="friday-sdk",
-    version="0.1.2",
+    version="0.1.3",
     author="Friday Team",
-    author_email="support@friday.dev",
+    author_email="support@fridaydata.tech",
     description="Official Python SDK for the Friday API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/friday/friday-sdk-python",
+    url="https://github.com/yashpanditrao/friday_sdk",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

@@ -32,7 +32,7 @@ class TestFridayClient(unittest.TestCase):
     def test_scrape(self):
         """Test scrape method"""
         try:
-            scraped = self.client.scrape("https://raisegate.com", formats=["html", "markdown"])
+            scraped = self.client.scrape("https://fridaydata.tech", formats=["html", "markdown"])
             self.assertIsInstance(scraped, dict)
         except Exception as e:
             print(f"Warning: scrape test failed: {str(e)}")
@@ -40,7 +40,7 @@ class TestFridayClient(unittest.TestCase):
     def test_crawl(self):
         """Test crawl method"""
         try:
-            crawled = self.client.crawl("https://raisegate.com", formats=["html"], max_pages=2)
+            crawled = self.client.crawl("https://fridaydata.tech", formats=["html"], max_pages=2)
             self.assertIsInstance(crawled, dict)
         except Exception as e:
             print(f"Warning: crawl test failed: {str(e)}")
@@ -54,10 +54,31 @@ class TestFridayClient(unittest.TestCase):
             print(f"Warning: search test failed: {str(e)}")
 
     def test_extract(self):
-        """Test extract method"""
+        """Test extract method with and without custom schema"""
         try:
+            # Test without custom schema
             extracted = self.client.extract("https://supabase.com", "Extract the main features in json format")
             self.assertIsInstance(extracted, (dict, list))
+
+            # Test with custom schema
+            custom_schema = {
+                "features": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "description": {"type": "string"}
+                        }
+                    }
+                }
+            }
+            extracted_with_schema = self.client.extract(
+                "https://supabase.com",
+                "Extract the main features",
+                custom_schema=custom_schema
+            )
+            self.assertIsInstance(extracted_with_schema, (dict, list))
         except Exception as e:
             print(f"Warning: extract test failed: {str(e)}")
 

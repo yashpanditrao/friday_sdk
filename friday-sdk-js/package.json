@@ -2,7 +2,7 @@
   "name": "friday-sdk",
   "version": "0.2.1",
   "description": "Official JavaScript/TypeScript SDK for the Friday API",
-  "main": "dist/friday.js",
+  "main": "dist/index.js",
   "types": "dist/friday.d.ts",
   "scripts": {
     "build": "tsc",
