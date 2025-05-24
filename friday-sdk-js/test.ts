@@ -29,7 +29,12 @@ async function main() {
     const analyzeCompanyResult = await client.analyzeCompany("https://www.linkedin.com/company/raisegate/");
     console.log("✅ Analyze Company Result:", analyzeCompanyResult);
 
-    const extractResult = await client.extract("https://fridaydata.tech", "Friday");
+    const customSchema = {
+      title: "string",
+      description: "string",
+      price: "number"
+    };
+    const extractResult = await client.extract("https://fridaydata.tech", "Friday", customSchema);
     console.log("✅ Extract Result:", extractResult);
 
     const searchResult = await client.search("Run Clubs in SF", "US", 10);

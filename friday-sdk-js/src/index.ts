@@ -31,8 +31,8 @@ export class FridayClient {
         return analyzeCompany(this.client, linkedinUrl);
     }
 
-    extract(url: string, query: string): Promise<string> {  
-        return extract(this.client, url, query);
+    extract(url: string, query: string, customSchema?: Record<string, any>): Promise<string> {  
+        return extract(this.client, url, query, customSchema);
     }
 
     search(query: string, location: string, numResults: number): Promise<string> {
@@ -43,4 +43,3 @@ export class FridayClient {
     }
     
 }
-  
